@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  fmt-mongo-advanced-mongodb:
+    image: mongo:6.0
+    container_name: fmt-mongo-advanced-mongodb
+    volumes:
+      - ./.docker/tp-data:/tp-data
+      - ./.docker/restore-database.sh:/docker-entrypoint-initdb.d/restore-database.sh
+    ports:
+      - 27017:27017
