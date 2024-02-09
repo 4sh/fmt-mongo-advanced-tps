@@ -26,3 +26,10 @@ print(
         }
     })
 );
+
+print(db.baskets.find({
+    'products': {$elemMatch: {
+      'product.name': /fleur/i,
+      quantity: 5
+    }}
+}))
