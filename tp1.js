@@ -6,3 +6,12 @@ print(
             }
     })
 );
+
+print(
+    db.baskets.find({
+        $and: [
+            {'products': {$elemMatch: {'quantity': {$gte: 3}, 'product.name': 'Kafka sur le rivage'}}},
+            {'products': {$elemMatch: {'quantity': {$gte: 2}, 'product.name': 'Fleur de Zeppelin'}}}
+        ]
+    })
+);
