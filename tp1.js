@@ -1,20 +1,11 @@
-// Tous les produits dont la description contient le mot “fleur” puis le mot “ouvrage” (2 documents attendus)
-db.products.find({
-    description: ""
-})
+// Récupérer les paniers pour contenant le produit 0757100810837 et ne conserver que ces lignes en résultat.
+db.getCollection("baskets").find({"products.product._id": "0757100810837"}, {"products.$": 1})
 
-// Tous les produits dont le nom contient “image”, quelle que soit la casse (12 documents attendus)
-db.products.find({
-    name: ""
-})
 
-// Tous les produits dont la description contient le mot “livre” puis le mot “fleur”, quelle que soit la casse (6 documents attendus)
-db.products.find({
-    description: ""
-})
+// Pour tous les paniers, récupérer uniquement les lignes concernant les produits de type CLOTHES.
+db.getCollection("baskets").find({}, {"products": {$elemMatch: {type: "CLOTHES"}}})
 
-// Bonus
-// Tous les produits dont une des lignes de la description commence par “Les” (2 documents attendus)
-db.products.find({
-    description: ""
-})
+
+// Pour chaque produit, projeter son nom et un nouveau champ isExpensive indiquant si le prix unitaire
+// du produit dépasse 10.
+db.getCollection("products").find({}, {isExpensive: {$gt: ["$unitPrice", 10]}, unitPrice: 1})
