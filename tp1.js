@@ -1,13 +1,10 @@
-// Récupérer les paniers pour contenant le produit 0757100810837 et ne conserver que ces lignes en résultat.
-db.getCollection("baskets").find({}, {})
+// Écrire une requête triant les produits par noms avec une collation pour le français, et
+// constater la différence avec le tri sans cette dernière.
+db.getCollection("products").find({}).sort({name: -1})
 
 
-// Pour tous les paniers, récupérer uniquement les lignes concernant les produits de type CLOTHES.
-db.getCollection("baskets").find({}, {})
-
-
-// Pour chaque produit, projeter son nom et un nouveau champ isExpensive indiquant si le prix unitaire
-// du produit dépasse 10.
-db.getCollection("products").find({}, {})
+// Enrichir la requête précédente pour s’assurer que les noms de produits commençants par un
+// nombre soient triés comme des nombres.
+db.getCollection("products").find({}, {}).sort({name: -1})
 
 
