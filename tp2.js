@@ -1,26 +1,19 @@
-// Écrire une requête d’agrégation, avec $bucket, permettant de connaître, pour chaque trimestre de l’année 2023 :
-// - Le chiffre d'affaires
-// - Le montant moyen d’une facture
-// - Le nombre de produits vendus
+// Les factures portent une notion de droit de visibilité via les champs _right dans le document et certains sous-objets.
+// Écrire une requête permettant de prendre en compte cette notion de droit, grâce à $redact,
+// en respectant les règles (exemple concret sur le slide suivant) :
+// - si le champ _right est absent ou null alors le document auquel il appartient est visible de tous,
+//   mais il faut s’assurer que les sous-objets sont visibles également
+// - si le champ supérieur ou égal à 0, alors seul quelqu’un ayant un droit supérieur ou égal pourra
+//   voir l’objet dans lequel est présent ce droit.
+var currentUserRight = 0;
+
 db.getCollection("invoices").aggregate([
-    // Filtrage sur l'année 2023
-    {$match: {date: {$gte: ISODate("2023-01-01T00:00:00.000+0000"), $lt: ISODate("2024-01-01T00:00:00.000+0000")}}},
-    {$bucket: {
-            // Le groupement se fait sur le mois, extrait de la date
-            groupBy: {$month: {date: "$date"}},
-            // Définition des buckets :
-            // [1; 4[   -> 1er trimestre
-            // [4; 7[   -> 2eme trimestre
-            // [7; 10[  -> 3eme trimestre
-            // [10; 13[ -> 4eme trimestre
-            boundaries: [1, 4, 7, 10, 13],
-            output: {
-                // Le chiffre d'affaires
-                totalPrice: {$sum: "$totalPrice"},
-                // Le montant moyen d’une facture
-                averagePrice: {$avg: "$totalPrice"},
-                // Le nombre de produits vendus
-                nbProducts: {$sum: {$reduce: {input: "$lines", initialValue: 0, in: {$sum: "$$this.quantity"}}}}
+    {
+        $redact: {
+            $cond: {
+                if: {$gte: [currentUserRight , "$_right" ]},
+                then: "$$DESCEND",
+                else: "$$PRUNE"
             }
         }
     }
@@ -28,30 +21,35 @@ db.getCollection("invoices").aggregate([
 
 
 // Bonus
-// Écrire la même requête, mais sans $bucket
-db.getCollection("invoices").aggregate([
-    {$match: {date: {$gte: ISODate("2023-01-01T00:00:00.000+0000"), $lt: ISODate("2024-01-01T00:00:00.000+0000")}}},
-    // Ajout d'un champ month, extrait de la date
-    {$addFields: {month: {$month: {date: "$date"}}}},
-    // Ajout d'un champ quarter désignant le trimestre, calculé grace à $switch
-    {$addFields: {quarter: {
-        $switch: {
-            branches: [
-                {case: {$lte: ["$month", 3]}, then: 1},
-                {case: {$lte: ["$month", 6]}, then: 2},
-                {case: {$lte: ["$month", 9]}, then: 3},
-                {case: {$lte: ["$month", 12]}, then: 4}
-            ]
+// Enrichir la requête précédente, afin de ne voir que les 2 lignes de facturation le plus important de la facture.
+currentUserRight = 2;
 
-        }}}},
-    {$group: {
-            // Le groupement se fait sur le champ quarter, précédemment ajouté
-            _id: "$quarter",
-            // Le chiffre d'affaires
-            totalPrice: {$sum: "$totalPrice"},
-            // Le montant moyen d’une facture
-            averagePrice: {$avg: "$totalPrice"},
-            // Le nombre de produits vendus
-            nbProducts: {$sum: {$reduce: {input: "$lines", initialValue: 0, in: {$sum: "$$this.quantity"}}}}
-    }},
+db.getCollection("invoices").aggregate([
+    {
+        $redact: {
+            $cond: {
+                if: {$gte: [currentUserRight , "$_right" ]},
+                then: "$$DESCEND",
+                else: "$$PRUNE"
+            }
+        }
+    },
+    // Surcharge du champ lines existant
+    {
+        $addFields: {
+            lines: {
+                // N'étant pas dans une opération de groupement, on ne peut pas utiliser $topN
+                // $firstN sur le tableau trié permet de s'en sortir
+                $firstN: {
+                    n: 2,
+                    input: {
+                        $sortArray: {
+                            input: "$lines",
+                            sortBy: {totalPrice: -1}
+                        }
+                    }
+                }
+            }
+        }
+    }
 ])
