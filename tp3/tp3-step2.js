@@ -14,7 +14,10 @@ db.baskets.updateOne(
             "products.$[].totalPrice": 1.1,
             "products.$[].product.unitPrice": 1.1,
             "totalPrice": 1.1
-        }
+        },
+        $currentDate: {
+            lastEditionDate: true
+        },
     }
 )
 
@@ -43,7 +46,10 @@ db.baskets.updateOne(
         $mul: {
             "products.$.totalPrice": 0.9,
             "products.$.product.unitPrice": 0.9
-        }
+        },
+        $currentDate: {
+            lastEditionDate: true
+        },
     }
 )
 
@@ -68,7 +74,10 @@ db.baskets.updateOne(
         $mul: {
             "products.$[bookFilter].totalPrice": 0.9,
             "products.$[bookFilter].product.unitPrice": 0.9
-        }
+        },
+        $currentDate: {
+            lastEditionDate: true
+        },
     },
     {
         arrayFilters: [
