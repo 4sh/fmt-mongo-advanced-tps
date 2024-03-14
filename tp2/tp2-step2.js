@@ -13,7 +13,7 @@ db.getCollection("invoices").aggregate([
 
 
 // Bonus
-// Enrichir la requête précédente, afin de ne voir que les 2 lignes de facturation le plus important de la facture.
+// Enrichir la requête précédente, afin de ne voir que les 2 lignes de facturation les plus importantes de la facture.
 currentUserRight = 2;
 
 db.getCollection("invoices").aggregate([
