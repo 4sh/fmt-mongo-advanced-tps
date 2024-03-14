@@ -25,6 +25,7 @@ db.getCollection("customers").insertOne({
 
 
 // Ajouter un produit dans le panier du client Eli AZUL pour le magasin "Magasin de Paris".
+// On souhaite que les produits du panier soient triés par ordre alphabétique.
 // Le panier n’existe pas, mais on souhaite faire une requête de mise à jour (update) et non pas d’insertion (insert).
 // La requête doit donc gérer le cas du panier non existant.
 // Pour rappel, voici le schéma d'un panier :
