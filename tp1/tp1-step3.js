@@ -31,10 +31,11 @@ db.baskets.find({
 
 // Bonus
 // Écrire une requête pour trouver tous les paniers qui contiennent au moins un livre
-// dont le titre contient “fleur”, quelle que soit la casse, en 5 exemplaires
+// dont le titre contient “fleur”, quelle que soit la casse, commandés en au moins 2 exemplaires
 db.baskets.find({
     'products': {$elemMatch: {
-      'product.name': /fleur/i,
-      quantity: 5
-    }}
+            'product.type': 'BOOK',
+            'product.name': /fleur/i,
+            quantity: {$gte:2}
+        }}
 })
