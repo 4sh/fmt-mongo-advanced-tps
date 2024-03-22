@@ -1,8 +1,8 @@
-// Récupérer les paniers pour contenant le produit 0757100810837 et ne conserver que ces lignes en résultat.
+// Récupérer les paniers contenant le produit “Les fleurs du mal” et ne conserver qu’une ligne en résultat.
 db.getCollection("baskets").find({}, {})
 
 
-// Pour tous les paniers, récupérer uniquement les lignes concernant les produits de type CLOTHES.
+// Pour tous les paniers, récupérer uniquement une ligne concernant un produit de type CLOTHES.
 db.getCollection("baskets").find({}, {})
 
 
