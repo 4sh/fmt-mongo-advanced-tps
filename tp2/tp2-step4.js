@@ -24,17 +24,21 @@ db.invoices.aggregate([
                 averagePrice: {$avg: "$totalPrice"},
                 // Le nombre de produits vendus dont le prix unitaire est > 5€
                 nbProducts: {
+                    // Ce $sum est utilisé comme accumulateur
                     $sum: {
-                        $map: {
-                            input: {
-                                $filter: {
-                                    input: "$lines",
-                                    as: "item",
-                                    cond: {$gt: ["$$item.product.unitPrice", 5]}
-                                }
-                            },
-                            as: "line",
-                            in: "$$line.quantity"
+                        // Ce $sum est utilisé comme un opérateur sur un tableau
+                        $sum: {
+                            $map: {
+                                input: {
+                                    $filter: {
+                                        input: "$lines",
+                                        as: "item",
+                                        cond: {$gt: ["$$item.product.unitPrice", 5]}
+                                    }
+                                },
+                                as: "line",
+                                in: "$$line.quantity"
+                            }
                         }
                     }
                 }
