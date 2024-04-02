@@ -1,4 +1,4 @@
-db.products.find({price: {$lt: 30}}, {price: -1, name: 1}).sort({name: 1})
+db.products.find({type: "BOOK", unitPrice: {$lt: 30}}, {unitPrice: -1, name: 1}).sort({name: 1})
 
 // Essayez de deviner les différentes étapes qui vont être retenues par Mongo pour traiter cette requête.
 // TODO
