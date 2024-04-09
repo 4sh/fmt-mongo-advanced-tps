@@ -11,10 +11,10 @@ session.startTransaction( {
     writeConcern: { w: "majority" }
 });
 
-const productId = db.products.findOne({'properties.isbn10': '2295012880'}, {_id: 1})._id;
+const productId = session.getDatabase("formation-mongo").products.findOne({'properties.isbn10': '2295012880'}, {_id: 1})._id;
 const newPrice = 20;
 
-db.products.updateOne(
+session.getDatabase("formation-mongo").products.updateOne(
     {_id: productId},
     {
         $set: {
@@ -23,7 +23,7 @@ db.products.updateOne(
     }
 );
 
-db.baskets.updateOne(
+session.getDatabase("formation-mongo").baskets.updateMany(
     {
         "products.product._id": productId
     },
