@@ -31,8 +31,8 @@ db.inventories.find({
         $lt: [{
             $cond: {
                 if: {$gte: ['$quantity', 100]},
-                then: {$multiply: ['$price.unitPrice', 0.5]},
-                else: {$multiply: ['$price.unitPrice', 0.75]}
+                then: {$multiply: ['$product.unitPrice', 0.5]},
+                else: {$multiply: ['$product.unitPrice', 0.75]}
             }
         }, 5]
     }
