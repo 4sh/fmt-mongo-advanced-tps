@@ -20,7 +20,7 @@ db.getCollection("invoices").aggregate([
                 // Le montant moyen d’une facture
                 averagePrice: {$avg: "$totalPrice"},
                 // Le nombre de produits vendus
-                nbProducts: {$sum: {$reduce: {input: "$lines", initialValue: 0, in: {$sum: "$$this.quantity"}}}}
+                nbProducts: {$sum: {$reduce: {input: "$lines", initialValue: 0, in: {$sum: {$add: ["$$value", "$$this.quantity"]}}}}}
             }
         }
     }
