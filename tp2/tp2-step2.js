@@ -2,7 +2,7 @@
 // Écrire une requête permettant de prendre en compte cette notion de droit, grâce à $redact,
 // en respectant les règles (exemple concret sur le slide suivant) :
 // - si le champ _right est absent ou null alors le document auquel il appartient est visible de tous,
-//   mais il faut s’assurer que les sous-objets sont visibles également
+// mais il faudra quand même vérifier que les sous-niveaux sont visibles ou non.
 // - si le champ supérieur ou égal à 0, alors seul quelqu’un ayant un droit supérieur ou égal pourra
 //   voir l’objet dans lequel est présent ce droit.
 var currentUserRight = 0;
@@ -32,6 +32,7 @@ db.getCollection("invoices").aggregate([
                 then: "$$DESCEND",
                 else: "$$PRUNE"
             }
+
         }
     },
     // Surcharge du champ lines existant
