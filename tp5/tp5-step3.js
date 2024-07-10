@@ -1,6 +1,6 @@
 // Voici un script, qui pourrait correspondre à ce qui est fait dans une application métier.
-// Dans un premier temps, optimiser ce script sans créer d'index. Écrire dans le fichier tp4-step6-opti-sans-index.js
-// Bonus : Dans un second temps, optimiser encore plus en créant des index. Écrire dans le fichier tp4-step6-opti-avec-index.js
+// Dans un premier temps, optimiser ce script sans créer d'index. Écrire dans le fichier tp5-step3-opti-no-index.js
+// Bonus : Dans un second temps, optimiser encore plus en créant des index. Écrire dans le fichier tp5-step3-opti-with-index.js
 
 const customer = db.customers.find({lastName: /^BLANCHARD$/}).toArray()[0];
 
