@@ -20,7 +20,7 @@ db.products.explain().aggregate([
 
 // Vérifiez maintenant ce qui est réellement executé.
 db.products.explain("executionStats").aggregate([
-    {$match: {type: {$in: ["BOOK", "CLOTHES"]}}}
+    {$match: {type: {$in: ["BOOK", "CLOTHES"]}}},
     {$group: {_id: "$type", nb: {$sum: 1}, averagePrice: {$avg: "$unitPrice"}}}
 ])
 // Les étapes indiquées par le moteur d'execution slot-based :
