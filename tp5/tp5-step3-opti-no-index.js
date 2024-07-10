@@ -36,7 +36,7 @@ const totalAmountInvoiced = invoiceReport.total.totalAmountInvoiced;
 const nbProductsBoughtByType = invoiceReport.byType;
 
 // Pas besoin de récupèrer le panier le plus récent au complet. Seul le champs totalPrice nous intéresse.
-const basket = db.baskets.find({"customer._id": customer._id}).sort({creationDate: -1}).limit(1).toArray()[0];
+const basket = db.baskets.find({"customer._id": customer._id}, {_id: 0, totalPrice: 1}).sort({creationDate: -1}).limit(1).toArray()[0];
 let totalAmountToInvoice = 0;
 
 if (basket) {
