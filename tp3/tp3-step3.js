@@ -1,5 +1,6 @@
 // Sur un panier pris au hasard, contenant des livres et des légumes, diminuer le prix des livres de 10%
 // et mettre à jour le prix total du panier.
+// Attention, une solution qui recopierait champ par champ n’est pas envisageable.
 const basketWithBookAndVegetable = db.getCollection("baskets").aggregate([
     {$match: {$and: [{"products.product.type": "BOOK"}, {"products.product.type": "VEGETABLE"}]}},
     {$sample: {size: 1}}
