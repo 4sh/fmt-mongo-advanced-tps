@@ -5,6 +5,9 @@
 // mais il faudra quand même vérifier que les sous-niveaux sont visibles ou non.
 // - si le champ supérieur ou égal à 0, alors seul quelqu’un ayant un droit supérieur ou égal pourra
 //   voir l’objet dans lequel est présent ce droit.
+
+// Dans le support de TP, vous trouverez des exemples de ce qui est attendu.
+
 var currentUserRight = 0;
 
 db.getCollection("invoices").aggregate([
