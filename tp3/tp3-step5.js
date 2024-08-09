@@ -2,9 +2,7 @@
 
 
 // Faire 1000 mises à jour unitaires (peu importe la collection). Pour cet exercice, demander au formateur un accès à un replica Mongo déployé.
-// - calculer le temps total avec le write concern par défaut
-// - idem (en changeant les valeurs de mise à jour), mais avec un write concern le moins exigeant possible
-// - idem, avec wc le plus exigeant possible
-// - grouper toutes les opérations dans un bulk, avec wc minimal
-// - idem, avec wc maximal
+// - calculer le temps total avec le write concern par défaut, puis le wc minimal, puis le wc maximal.
+// - grouper toutes les opérations dans un bulk ordonné, avec les 3 wc précédents.
+// - grouper toutes les opérations dans un bulk non-ordonné, avec les 3 wc précédents.
 // - analyser les différents résultats
