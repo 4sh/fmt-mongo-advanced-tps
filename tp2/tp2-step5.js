@@ -1,4 +1,4 @@
-// Calculer l’état des stocks du magasin 1 si les paniers étaient validés par les clients.
+// Calculer l’état des stocks du magasin 'Magasin de Paris' si les paniers étaient validés par les clients.
 
 
 
