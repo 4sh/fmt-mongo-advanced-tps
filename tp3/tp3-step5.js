@@ -11,11 +11,9 @@ db.getCollection("baskets").updateMany({},
 
 
 // Faire 1000 mises à jour unitaires (peu importe la collection). Pour cet exercice, demander au formateur un accès à un replica Mongo déployé.
-// - calculer le temps total avec le write concern par défaut
-// - idem (en changeant les valeurs de mise à jour), mais avec un write concern le moins exigeant possible
-// - idem, avec wc le plus exigeant possible
-// - grouper toutes les opérations dans un bulk, avec wc minimal
-// - idem, avec wc maximal
+// - calculer le temps total avec le write concern par défaut, puis le wc minimal, puis le wc maximal.
+// - grouper toutes les opérations dans un bulk ordonné, avec les 3 wc précédents.
+// - grouper toutes les opérations dans un bulk non-ordonné, avec les 3 wc précédents.
 // - analyser les différents résultats
 
 // mongodb+srv://<login>:<mdp>@4sh-learning-mongo.det9c4e.mongodb.net/formation-essentiels?retryWrites=true&loadBalanced=false&replicaSet=atlas-scemqz-shard-0&readPreference=primary&srvServiceName=mongodb&connectTimeoutMS=10000&w=majority&authSource=admin&authMechanism=SCRAM-SHA-1
@@ -97,7 +95,7 @@ execute(
 
 
 execute(
-    NB_UPDATES + " random updates with bulk and minimal WC",
+    NB_UPDATES + " random updates with bulk and maximal WC",
     () => {
         const updates = []
         for (let i = 0; i < NB_UPDATES; i++) {
@@ -109,9 +107,54 @@ execute(
 )
 // => 5399
 
-// 1000 random updates with default WC: 33259ms         -> 33.3s
-// 1000 random updates with minimal WC: 24229ms         -> 24.3s
-// 1000 random updates with maximal WC: 35587ms         -> 35.6s
-// 1000 random updates with bulk and default WC: 3485ms ->  3.5s
-// 1000 random updates with bulk and minimal WC: 2889ms ->  2.9s
-// 1000 random updates with bulk and minimal WC: 5399ms ->  5.4s
+execute(
+    NB_UPDATES + " random updates with unordered bulk and default WC",
+    () => {
+        const updates = []
+        for (let i = 0; i < NB_UPDATES; i++) {
+            updates.push({updateOne: {filter: {}, update: {$mul: {"product.unitPrice": 1.05}}}})
+        }
+
+        db.inventories.bulkWrite(updates, {ordered: false})
+    }
+)
+// => 332
+
+
+execute(
+    NB_UPDATES + " random updates with unordered bulk and minimal WC",
+    () => {
+        const updates = []
+        for (let i = 0; i < NB_UPDATES; i++) {
+            updates.push({updateOne: {filter: {}, update: {$mul: {"product.unitPrice": 1.05}}}})
+        }
+
+        db.inventories.bulkWrite(updates, { writeConcern : {w: 0, j: false}, ordered: false })
+
+    }
+)
+// => 192
+
+
+execute(
+    NB_UPDATES + " random updates with unordered bulk and maximal WC",
+    () => {
+        const updates = []
+        for (let i = 0; i < NB_UPDATES; i++) {
+            updates.push({updateOne: {filter: {}, update: {$mul: {"product.unitPrice": 1.05}}}})
+        }
+
+        db.inventories.bulkWrite(updates, { writeConcern : {w: 3, j: true}, ordered: false })
+    }
+)
+// 258
+
+// 1000 random updates with default WC: 33259ms                   -> 33.3s
+// 1000 random updates with minimal WC: 24229ms                   -> 24.3s
+// 1000 random updates with maximal WC: 35587ms                   -> 35.6s
+// 1000 random updates with bulk and default WC: 3485ms           ->  3.5s
+// 1000 random updates with bulk and minimal WC: 2889ms           ->  2.9s
+// 1000 random updates with bulk and maximal WC: 5399ms           ->  5.4s
+// 1000 random updates with unordered bulk and default WC: 332ms  ->  0.3s
+// 1000 random updates with unordered bulk and minimal WC: 192ms  ->  0.2s
+// 1000 random updates with unordered bulk and maximal WC: 258ms  ->  0.3s
