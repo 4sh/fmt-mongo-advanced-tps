@@ -25,7 +25,7 @@ db.inventories.aggregate([
 
 
 
-// Faire une requête de mise à jour qui ajoute un champ stats sur les factures. Ce champ stats doit calculer le prix total par type de produit.
+// Faire une requête qui ajoute un champ stats dans les résultats de factures. Ce champ stats doit calculer le prix total par type de produit.
 // - Dans un premier temps, on s’autorisera à connaître exhaustivement les différents types de produit.
 // - Ensuite, on cherchera à avoir le moins de référence en dur aux types (idéalement 1).
 // - Et pour finir, on veut une solution sans aucune référence aux types. On considère donc qu’on ne connaît pas l’exhaustivité des types possibles.
@@ -33,8 +33,9 @@ db.inventories.aggregate([
 // Les solutions qui suivent sont écrites avec un updateOne sur une facture de mon choix.
 
 // Solution 1 : relativement simple, mais avec une dépendance sur les types.
-db.invoices.updateOne({_id: ObjectId("65f35540fbdf782c2e41ee7f")},
+db.invoices.aggregate(
     [
+        {$match: {_id: ObjectId("65f35540fbdf782c2e41ee7f")}},
         {$addFields: {
                 stats: {
                     $reduce: {
@@ -77,8 +78,9 @@ db.invoices.updateOne({_id: ObjectId("65f35540fbdf782c2e41ee7f")},
 
 
 // Solution 2 : Approche différente pour n'avoir qu'une seule référence sur le type.
-db.invoices.updateOne({_id: ObjectId("65f35540fbdf782c2e41ee7f")},
+db.invoices.aggregate(
     [
+        {$match: {_id: ObjectId("65f35540fbdf782c2e41ee7f")}},
         {$addFields: {
                 stats: {
                     $arrayToObject: {
@@ -136,8 +138,9 @@ db.invoices.updateOne({_id: ObjectId("65f35540fbdf782c2e41ee7f")},
 
 
 // Solution sans dépendance aux types
-db.invoices.updateOne({_id: ObjectId("65f35540fbdf782c2e41ee7f")},
+db.invoices.aggregate(
     [
+        {$match: {_id: ObjectId("65f35540fbdf782c2e41ee7f")}},
         {$addFields: {
                 stats: {
                     $reduce: {
