@@ -5,7 +5,7 @@ db.products.aggregate([
 ])
 
 // D'après-vous quelles étapes Mongo va-t-il suivre ?
-// IDXSCAN
+// IXSCAN
 // GROUP
 
 // Vérifiez le winning plan
@@ -13,7 +13,7 @@ db.products.explain().aggregate([
     {$match: {type: {$in: ["BOOK", "CLOTHES"]}}},
     {$group: {_id: "$type", nb: {$sum: 1}, averagePrice: {$avg: "$unitPrice"}}}
 ])
-// IDXSCAN
+// IXSCAN
 // PROJECTION_COVERED
 // GROUP
 
