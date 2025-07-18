@@ -45,13 +45,7 @@ db.baskets.updateOne(
         {$addFields: {
             // Le prix total est la somme des prix totaux de chaque ligne du panier
             totalPrice: {
-                $sum: {
-                    // On récupère les prix totaux pour chaque ligne
-                    $map: {
-                        input: "$products",
-                        in: "$$this.totalPrice"
-                    }
-                }
+                $sum: "$products.totalPrice"
             },
             // Mise à jour de la date de dernière édition
             lastEditionDate : new ISODate()
