@@ -6,7 +6,7 @@
 // Écrire une requête permettant de récupérer uniquement les paniers contenant au moins 10 produits.
 db.getCollection("baskets").find({
     $expr: {
-        $lt: [{$sum: "$products.quantity"}, 10]
+        $gte: [{$sum: "$products.quantity"}, 10]
     }
 });
 
